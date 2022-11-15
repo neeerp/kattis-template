@@ -11,7 +11,10 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SolverTest {
-    private static final String EXPECTED_STRING = "Hello world!";
+    private static final String TEST_RESOURCE_PATH_PREFIX = "src/test/resources/";
+    private static final String INPUT_SUFFIX = ".input";
+    private static final String EXPECTED_SUFFIX = ".expected";
+    private static final String OUTPUT_SUFFIX = ".output";
 
     private Solver solver;
 
@@ -22,18 +25,31 @@ class SolverTest {
 
     @Test
     void testSimple() throws IOException {
-        File inputFile = new File("src/test/resources/testSimple.input");
+        runIOTest("testSimple");
+    }
+
+    @Test
+    void testGoodbye() throws IOException {
+        runIOTest("testGoodbye");
+    }
+
+    void runIOTest(String testName) throws IOException {
+        String inputPath = TEST_RESOURCE_PATH_PREFIX + testName + INPUT_SUFFIX;
+        String outputPath = TEST_RESOURCE_PATH_PREFIX + testName + OUTPUT_SUFFIX;
+        String expectedPath = TEST_RESOURCE_PATH_PREFIX + testName + EXPECTED_SUFFIX;
+
+        File inputFile = new File(inputPath);
         InputStream inputStream = new FileInputStream(inputFile);
         Solver.InputReader in = new Solver.InputReader(inputStream);
 
-        FileOutputStream fos = new FileOutputStream("src/test/resources/testSimple.output");
+        FileOutputStream fos = new FileOutputStream(outputPath);
         PrintWriter out = new PrintWriter(fos);
 
         solver.solve(in, out);
         out.close();
 
-        Path expected = Path.of("src/test/resources/testSimple.expected");
-        Path actual = Path.of("src/test/resources/testSimple.output");
+        Path expected = Path.of(expectedPath);
+        Path actual = Path.of(outputPath);
         assertArrayEquals(Files.readAllBytes(expected), Files.readAllBytes(actual));
     }
 
