@@ -3,6 +3,9 @@ package com.kattis;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,6 +18,23 @@ class SolverTest {
     @BeforeEach
     void setUp() {
         solver = new Solver();
+    }
+
+    @Test
+    void testSimple() throws IOException {
+        File inputFile = new File("src/test/resources/testSimple.input");
+        InputStream inputStream = new FileInputStream(inputFile);
+        Solver.InputReader in = new Solver.InputReader(inputStream);
+
+        FileOutputStream fos = new FileOutputStream("src/test/resources/testSimple.output");
+        PrintWriter out = new PrintWriter(fos);
+
+        solver.solve(in, out);
+        out.close();
+
+        Path expected = Path.of("src/test/resources/testSimple.expected");
+        Path actual = Path.of("src/test/resources/testSimple.output");
+        assertArrayEquals(Files.readAllBytes(expected), Files.readAllBytes(actual));
     }
 
     @Test
